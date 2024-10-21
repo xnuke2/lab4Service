@@ -1,0 +1,32 @@
+services:
+  mongodbusers:
+    image: mongo:latest
+    container_name: mongodbUsers
+    restart: always
+    networks:
+      - deputy_service_network
+    environment:
+      MONGO_INITDB_DATABASE: Users
+    ports:
+      - 27019:27017
+    volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+  userservice:
+    container_name: userService
+    build:
+      dockerfile: Dockerfile_users
+      context: .
+    ports:
+      - 8090:8090
+    depends_on:
+      - mongodbusers
+    networks:
+      - deputy_service_network
+
+
+
+networks:
+  deputy_service_network:
+    driver: bridge
+    external: true
+    name: deputyNetwork
