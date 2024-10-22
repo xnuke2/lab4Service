@@ -5,6 +5,7 @@ import com.example.lab4service.Entity.UserEntity;
 import com.example.lab4service.Repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.DltHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -53,6 +54,7 @@ public class UsersService {
         userRepository.save(new UserEntity(newLogin,name,age));
         return true;
     }
+    @DltHandler
     @KafkaListener(topics = "topic-1")
     public void listener(ConfirmDeputyMessage incMessageInput) {
         try {
@@ -70,4 +72,5 @@ public class UsersService {
             log.info(e.getMessage());
         }
     }
+
 }
